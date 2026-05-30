@@ -150,13 +150,13 @@ You **MUST** consider the user input before proceeding (if not empty).
 6. Execute implementation following the task plan:
    - **Phase-by-phase execution**: Complete each phase before moving to the next
    - **Respect dependencies**: Run sequential tasks in order, parallel tasks [P] can run together  
-   - **Follow TDD approach**: Execute test tasks before their corresponding implementation tasks
+   - **TDD is mandatory**: For each user story, execute its test tasks FIRST and confirm they fail (red) before writing any implementation. Tests are the executable contract of the spec and are never skipped
    - **File-based coordination**: Tasks affecting the same files must run sequentially
    - **Validation checkpoints**: Verify each phase completion before proceeding
 
 7. Implementation execution rules:
    - **Setup first**: Initialize project structure, dependencies, configuration
-   - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
+   - **Tests before code (mandatory)**: Write the tests for contracts, entities and integration scenarios, and confirm they fail, before implementing the corresponding code
    - **Core development**: Implement models, services, CLI commands, endpoints
    - **Integration work**: Database connections, middleware, logging, external services
    - **Polish and validation**: Unit tests, performance optimization, documentation
@@ -168,6 +168,10 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Provide clear error messages with context for debugging
    - Suggest next steps if implementation cannot proceed
    - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
+   - **Atomic commits**: After completing each task (with its tests green), create one atomic
+     git commit. Use the convention `tipo(scope): descripcion` (feat/fix/test/refactor/docs/chore)
+     and reference the task ID and the spec criterion it covers, e.g.
+     `git commit -m "feat(profiler): T020 inferencia de tipos (US-001)"`. One task = one commit.
 
 9. Completion validation:
    - Verify all required tasks are completed

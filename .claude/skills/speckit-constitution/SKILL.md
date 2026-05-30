@@ -79,7 +79,7 @@ Follow this execution flow:
 3. Draft the updated constitution content:
    - Replace every placeholder with concrete text (no bracketed tokens left except intentionally retained template slots that the project has chosen not to define yet—explicitly justify any left).
    - Preserve heading hierarchy and comments can be removed once replaced unless they still add clarifying guidance.
-   - Ensure each Principle section: succinct name line, paragraph (or bullet list) capturing non‑negotiable rules, explicit rationale if not obvious.
+   - Ensure each Principle section has the three mandatory fields of the template: **Statement** (the non-negotiable rule), **Rationale** (why it is non-negotiable) and **Enforcement** (how it is verified: a CI test, a lint rule, a PR check). A principle without a verifiable Enforcement is a wish, not a rule — do not leave it empty. Keep the named sections of the template: Core Principles, Technical Standards, Quality Gates, Spec-as-Source Rules and Governance.
    - Ensure Governance section lists amendment procedure, versioning policy, and compliance review expectations.
 
 4. Consistency propagation checklist (convert prior checklist into active validations):

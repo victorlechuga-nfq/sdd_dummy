@@ -1,0 +1,70 @@
+name: Spec Guard
+
+# Puerta Spec-as-Source: rechaza PRs que cambian código sin un delta de spec.
+# Todo cambio de comportamiento debe nacer de una spec (specs/ o .specify/memory/)
+# o de la spec original del proyecto (spec_pr.md / spec-*.md).
+#
+# Excepciones permitidas (no requieren delta de spec):
+#   - cambios solo en docs/, mkdocs.yml, README*, CHANGELOG*
+#   - cambios solo en pyproject.toml, .github/, .gitignore, .env.example
+#   - cambios solo en scripts/, .specify/scripts/, .specify/templates/
+#   - PRs etiquetadas con `skip-spec-guard` (requieren justificación en commit body)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  spec-guard:
+    name: Spec-as-Source gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Comprobar etiqueta skip-spec-guard
+        id: skip
+        run: |
+          set -e
+          if echo "${{ toJson(github.event.pull_request.labels.*.name) }}" | grep -q '"skip-spec-guard"'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "PR etiquetada con skip-spec-guard: gate omitido (verifica que el cuerpo del PR justifique el motivo)."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Comprobar delta de spec
+        if: steps.skip.outputs.skip != 'true'
+        run: |
+          set -e
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          BASE="origin/${{ github.base_ref }}"
+          CHANGED=$(git diff --name-only "$BASE"...HEAD)
+          echo "Ficheros cambiados en el PR:"
+          echo "$CHANGED"
+          echo "----"
+
+          # Patrones de archivos que NO requieren spec (excepciones explícitas):
+          EXCEPTIONS_REGEX='^(docs/|mkdocs\.yml$|README|CHANGELOG|pyproject\.toml$|\.github/|\.gitignore$|\.env\.example$|scripts/|\.specify/scripts/|\.specify/templates/|\.specify/integrations/|\.specify/workflows/|\.specify/extensions\.yml$|\.specify/init-options\.json$|\.specify/integration\.json$|\.claude/)'
+
+          # Código que debería estar respaldado por spec: cualquier *.py o *.ts/*.tsx/*.go
+          # FUERA de las excepciones de arriba.
+          CODE=$(echo "$CHANGED" | grep -E '\.(py|ts|tsx|js|jsx|go|rs)$' | grep -v -E "$EXCEPTIONS_REGEX" || true)
+
+          # Delta de spec aceptado: cualquier spec de feature, memoria, ops, o spec del proyecto.
+          SPEC=$(echo "$CHANGED" | grep -E '^(specs/|\.specify/specs/|\.specify/memory/|\.specify/ops/|spec_pr\.md$|spec-.*\.md$)' || true)
+
+          if [ -n "$CODE" ] && [ -z "$SPEC" ]; then
+            echo "::error::Spec-as-Source: hay cambios de código sin delta de spec."
+            echo "Código cambiado sin una spec que lo respalde:"
+            echo "$CODE"
+            echo ""
+            echo "Soluciones:"
+            echo "  (a) Añade/actualiza la spec en specs/, .specify/memory/ o .specify/ops/."
+            echo "  (b) Si es un bug: crea una spec fix-NNN en specs/."
+            echo "  (c) Si el cambio está en un archivo de tooling/docs, asegúrate de no estar tocando *.py/*.ts fuera de las excepciones."
+            echo "  (d) Si es una excepción legítima: añade la etiqueta 'skip-spec-guard' al PR y justifica en el cuerpo."
+            exit 1
+          fi
+          echo "OK: no hay código cambiado, o viene acompañado de su spec."

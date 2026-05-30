@@ -1,104 +1,86 @@
-# Implementation Plan: [FEATURE]
-
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
-
-## Summary
-
-[Extract from feature spec: primary requirement + technical approach from research]
-
-## Technical Context
+# Technical Plan: [NOMBRE DE LA FEATURE]
 
 <!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
+  SPEC TECNICA. La genera /speckit.plan a partir de spec.md.
+  Ruta: specs/NNN-nombre-feature/plan.md
+  Aqui SI se habla de COMO: stack, arquitectura, decisiones tecnicas.
+  Cada decision tecnica debe atarse a un criterio de la spec o a un principio
+  de la constitution. Sin huerfanos. Si aparece codigo, esta mal ubicado.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Feature**: `[NNN-nombre-feature]` | **Fecha**: [YYYY-MM-DD] | **Spec**: [ruta a spec.md]
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+<!-- GATE: debe pasar antes de la Fase 0. Re-evaluar tras la Fase 1. -->
 
-[Gates determined based on constitution file]
+- **PR-01**: [como cumple este plan] -- estado
+- **PR-02**: [como cumple este plan] -- estado
 
-## Project Structure
+## Architecture Decision
 
-### Documentation (this feature)
+[Decision tecnica principal y su justificacion. Si se han evaluado alternativas,
+referencia `research.md`.]
 
-```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit-plan command output)
-├── research.md          # Phase 0 output (/speckit-plan command)
-├── data-model.md        # Phase 1 output (/speckit-plan command)
-├── quickstart.md        # Phase 1 output (/speckit-plan command)
-├── contracts/           # Phase 1 output (/speckit-plan command)
-└── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
-```
+## Stack para esta Feature
 
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+- [Componente]: [tecnologia + version]
+- [Componente]: [tecnologia + version]
 
-```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+<!-- El stack debe ser un subconjunto del "Stack Aprobado" de la constitution.
+     Cualquier desviacion se justifica aqui y se registra en decisions.md. -->
 
-tests/
-├── contract/
-├── integration/
-└── unit/
+## Component Design
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+### [Componente 1]
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+- **Responsabilidad**: [que hace]
+- **Interfaz**: [metodos / endpoints publicos]
+- **Dependencias**: [que necesita]
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
+### [Componente 2]
 
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
-```
+- **Responsabilidad**: [...]
+- **Interfaz**: [...]
+- **Dependencias**: [...]
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+## Function Map
+
+<!-- Opcional. Vista de SISTEMA: cada FUN traduce una o varias US a comportamiento
+     de sistema. Referencia hacia arriba (US/CA); NO crea numeracion paralela. -->
+
+| Funcion | Implementa | Cubre criterios |
+|---------|-----------|-----------------|
+| `FUN-001` [nombre] | `US-001` | `CA-US001-01`, `CA-US001-02` |
+| `FUN-002` [nombre] | `US-002` | `CA-US002-01` |
+
+## Phase 0: Research (si aplica)
+
+[Resumen de la investigacion previa. Detalle en `research.md`. Resolver aqui toda
+marca [NEEDS CLARIFICATION] tecnica.]
+
+## Phase 1: Foundation
+
+- **Data model**: ver `data-model.md`
+- **API / event contracts**: ver `contracts/`
+- **Quickstart scenarios**: ver `quickstart.md`
+
+## Phase 2: Implementation
+
+[Descripcion de lo que se implementa y en que orden de capas. El desglose
+ejecutable en tareas atomicas lo produce /speckit.tasks en `tasks.md`.]
+
+## Risk Assessment
+
+| Riesgo | Probabilidad | Impacto | Mitigacion |
+|--------|--------------|---------|------------|
+| [Riesgo 1] | Alta / Media / Baja | Alto / Medio / Bajo | [Accion] |
+| [Riesgo 2] | Alta / Media / Baja | Alto / Medio / Bajo | [Accion] |
 
 ## Complexity Tracking
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
+<!-- Rellenar SOLO si el Constitution Check tiene violaciones que justificar. -->
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Violacion | Por que es necesaria | Alternativa mas simple descartada porque |
+|-----------|----------------------|------------------------------------------|
+| [...] | [...] | [...] |

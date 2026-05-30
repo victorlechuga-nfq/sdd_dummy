@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "default",
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git tag:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(pytest:*)",
+      "Bash(uv:*)",
+      "Bash(pip install:*)",
+      "Bash(ruff:*)",
+      "Bash(gofmt:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npx eslint:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker build:*)",
+      "Bash(docker run:*)",
+      "Bash(docker ps:*)",
+      "Bash(mkdocs:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(rm -r:*)",
+      "Bash(sudo:*)",
+      "Bash(Remove-Item -Recurse:*)",
+      "Bash(rd /s:*)",
+      "Bash(rmdir /s:*)",
+      "Bash(del /s:*)",
+      "Bash(del /q:*)",
+      "Bash(format:*)",
+      "Bash(diskpart:*)",
+      "Bash(mkfs:*)",
+      "Bash(dd if=:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)",
+      "Read(./.env)",
+      "Read(./secrets/**)",
+      "Write(./.env)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/auto-lint.sh || powershell -ExecutionPolicy Bypass -File .claude/hooks/auto-lint.ps1"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/auto-test.sh || powershell -ExecutionPolicy Bypass -File .claude/hooks/auto-test.ps1"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/final-validation.sh || powershell -ExecutionPolicy Bypass -File .claude/hooks/final-validation.ps1"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/reinjection.sh || powershell -ExecutionPolicy Bypass -File .claude/hooks/reinjection.ps1"
+          }
+        ]
+      }
+    ]
+  }
+}

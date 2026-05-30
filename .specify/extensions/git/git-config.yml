@@ -1,15 +1,19 @@
 # Git Branching Workflow Extension Configuration
-# Copied to .specify/extensions/git/git-config.yml on install
+# Copiado a .specify/extensions/git/git-config.yml en la instalacion.
 
-# Branch numbering strategy: "sequential" (001, 002, ...) or "timestamp" (YYYYMMDD-HHMMSS)
+# Estrategia de numeracion de ramas: "sequential" (001, 002...) o "timestamp".
 branch_numbering: sequential
 
-# Commit message used by `git commit` during repository initialization
+# Mensaje de commit usado por `git commit` en la inicializacion del repo.
 init_commit_message: "[Spec Kit] Initial commit"
 
-# Auto-commit before/after core commands.
-# Set "default" to enable for all commands, then override per-command.
-# Each key can be true/false. Message is customizable per-command.
+# Auto-commit antes/despues de los comandos core.
+# sdd_v1: activado para los comandos que producen ARTEFACTOS de spec, de modo que
+# cada artefacto quede versionado automaticamente (coherente con el discurso SDD de
+# "cada slash-command produce un artefacto versionado").
+# - after_implement queda en false a proposito: /speckit.implement hace su propio
+#   commit atomico por tarea (1 tarea = 1 commit).
+# - los before_* quedan en false: no hace falta commitear antes de cada comando.
 auto_commit:
   default: false
   before_clarify:
@@ -34,29 +38,29 @@ auto_commit:
     enabled: false
     message: "[Spec Kit] Save progress before issue sync"
   after_constitution:
-    enabled: false
-    message: "[Spec Kit] Add project constitution"
+    enabled: true
+    message: "docs(constitution): actualizar constitution del proyecto"
   after_specify:
-    enabled: false
-    message: "[Spec Kit] Add specification"
+    enabled: true
+    message: "docs(spec): anadir especificacion de feature"
   after_clarify:
-    enabled: false
-    message: "[Spec Kit] Clarify specification"
+    enabled: true
+    message: "docs(spec): resolver clarificaciones de la spec"
   after_plan:
-    enabled: false
-    message: "[Spec Kit] Add implementation plan"
+    enabled: true
+    message: "docs(plan): anadir plan tecnico y contratos"
   after_tasks:
-    enabled: false
-    message: "[Spec Kit] Add tasks"
+    enabled: true
+    message: "docs(tasks): anadir desglose de tareas"
   after_implement:
     enabled: false
     message: "[Spec Kit] Implementation progress"
   after_checklist:
-    enabled: false
-    message: "[Spec Kit] Add checklist"
+    enabled: true
+    message: "docs(checklist): anadir checklist"
   after_analyze:
-    enabled: false
-    message: "[Spec Kit] Add analysis report"
+    enabled: true
+    message: "docs(analyze): anadir informe de analisis"
   after_taskstoissues:
     enabled: false
     message: "[Spec Kit] Sync tasks to issues"

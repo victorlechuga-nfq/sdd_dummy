@@ -1,0 +1,44 @@
+site_name: MDQ — Documentación
+site_description: Documentación técnica del proyecto, framework Diátaxis.
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: green
+      accent: teal
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+    - search.highlight
+
+# La navegación se completa al generar docs/ con el skill /speckit-docs.
+nav:
+  - Inicio: index.md
+  - Tutorials:
+      - Tu primer caso: tutorials/first-feature.md
+  - How-to:
+      - Guías prácticas: how-to/
+  - Reference:
+      - CLI / API: reference/cli.md
+      - Modelo de datos: reference/data-model.md
+      - API (código): reference/api/
+  - Explanation:
+      - Arquitectura: explanation/architecture.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables

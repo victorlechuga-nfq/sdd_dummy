@@ -124,17 +124,24 @@ Given that feature description, do this:
          - No reasonable default exists
        - **LIMIT: Maximum 3 [NEEDS CLARIFICATION] markers total**
        - Prioritize clarifications by impact: scope > security/privacy > user experience > technical details
-    4. Fill User Scenarios & Testing section
-       If no clear user flow: ERROR "Cannot determine user scenarios"
-    5. Generate Functional Requirements
-       Each requirement must be testable
-       Use reasonable defaults for unspecified details (document assumptions in Assumptions section)
-    6. Define Success Criteria
-       Create measurable, technology-agnostic outcomes
-       Include both quantitative metrics (time, performance, volume) and qualitative measures (user satisfaction, task completion)
-       Each criterion must be verifiable without implementation details
-    7. Identify Key Entities (if data involved)
-    8. Return: SUCCESS (spec ready for planning)
+    4. Fill the eight mandatory sections of `spec-template.md`, in this exact order:
+       1. **Overview** - el problema y la solucion en 2-4 frases, sin jerga tecnica.
+       2. **Context** - por que se construye AHORA; contexto de negocio.
+       3. **User Stories** - una por journey, priorizadas (P1, P2...). Cada historia en
+          formato "Como / quiero / para". Cada historia lleva sus Criterios de Aceptacion
+          en notacion DADO / CUANDO / ENTONCES (un criterio = un test ejecutable) y sus
+          Success Metrics cuantificables. Notacion EARS aceptada como equivalente.
+          If no clear user flow: ERROR "Cannot determine user scenarios".
+       4. **Edge Cases** - bordes: vacio, nulo, overflow, errores.
+       5. **Out of Scope** - lo que esta feature explicitamente NO cubre.
+       6. **Dependencies** - Requiere / Bloquea.
+       7. **NEEDS CLARIFICATION** - marcas abiertas (ver paso 3); "Ninguna" si no hay.
+       8. **Constitution Alignment** - como cumple la spec cada principio aplicable de
+          `.specify/memory/constitution.md` (citar principios concretos).
+       Anade un **Glossary** si hay jerga de dominio.
+    5. Cada criterio de aceptacion debe ser testable y convertible directamente en un test.
+       Usa defaults razonables para lo no especificado y registralos como asuncion.
+    6. Return: SUCCESS (spec ready for /speckit.clarify or /speckit.plan)
 
 6. Write the specification to SPEC_FILE using the template structure, replacing placeholders with concrete details derived from the feature description (arguments) while preserving section order and headings.
 
@@ -270,61 +277,40 @@ Given that feature description, do this:
 
 ## Quick Guidelines
 
-- Focus on **WHAT** users need and **WHY**.
-- Avoid HOW to implement (no tech stack, APIs, code structure).
+- Focus on **WHAT** users need and **WHY**, never **HOW** (no tech stack, APIs, code
+  structure). The "how" belongs in `plan.md`. If you find yourself naming a library or
+  framework in `spec.md`, it is misplaced.
 - Written for business stakeholders, not developers.
-- DO NOT create any checklists that are embedded in the spec. That will be a separate command.
+- Keep the eight mandatory sections of `spec-template.md`, in order. Remove a section only
+  if it truly does not apply, and never leave a section as "N/A".
+- DO NOT embed checklists inside the spec. The quality checklist is a separate file
+  (see step 7) and `/speckit.checklist` produces any others.
 
-### Section Requirements
+### Acceptance criteria
 
-- **Mandatory sections**: Must be completed for every feature
-- **Optional sections**: Include only when relevant to the feature
-- When a section doesn't apply, remove it entirely (don't leave as "N/A")
+- Every user story has at least one acceptance criterion.
+- Criteria use **DADO / CUANDO / ENTONCES** (Given/When/Then). EARS notation (the five
+  patterns: Ubiquitous, Event-driven "When", State-driven "While", Unwanted "If/Then",
+  Optional "Where") is accepted as an equivalent. What is NOT accepted is a criterion that
+  cannot be turned into an executable test.
+- Cover at least one error/edge criterion per story, plus the Edge Cases section.
 
-### For AI Generation
+### Success metrics
 
-When creating this spec from a user prompt:
+- Each user story carries **Success Metrics**: concrete, quantifiable and verifiable
+  (for example "p99 latency < 200ms", "coverage of this story > 85%", "1M rows profiled
+  in < 5 min"). Numeric targets are expected — they are outcomes, not implementation
+  detail. Avoid vague adjectives ("fast", "robust").
 
-1. **Make informed guesses**: Use context, industry standards, and common patterns to fill gaps
-2. **Document assumptions**: Record reasonable defaults in the Assumptions section
-3. **Limit clarifications**: Maximum 3 [NEEDS CLARIFICATION] markers - use only for critical decisions that:
-   - Significantly impact feature scope or user experience
-   - Have multiple reasonable interpretations with different implications
-   - Lack any reasonable default
-4. **Prioritize clarifications**: scope > security/privacy > user experience > technical details
-5. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
-6. **Common areas needing clarification** (only if no reasonable default exists):
-   - Feature scope and boundaries (include/exclude specific use cases)
-   - User types and permissions (if multiple conflicting interpretations possible)
-   - Security/compliance requirements (when legally/financially significant)
+### Clarifications
 
-**Examples of reasonable defaults** (don't ask about these):
+- Make informed guesses from context and industry standards; record them as assumptions.
+- Use `[NEEDS CLARIFICATION: specific question]` only for decisions that materially affect
+  scope, security/privacy or user experience and have no reasonable default. Maximum 3-5
+  markers; prioritise scope > security/privacy > UX > technical detail. The agent must not
+  invent behaviour where an unresolved marker remains.
 
-- Data retention: Industry-standard practices for the domain
-- Performance targets: Standard web/mobile app expectations unless specified
-- Error handling: User-friendly messages with appropriate fallbacks
-- Authentication method: Standard session-based or OAuth2 for web apps
-- Integration patterns: Use project-appropriate patterns (REST/GraphQL for web services, function calls for libraries, CLI args for tools, etc.)
+### Constitution Alignment
 
-### Success Criteria Guidelines
-
-Success criteria must be:
-
-1. **Measurable**: Include specific metrics (time, percentage, count, rate)
-2. **Technology-agnostic**: No mention of frameworks, languages, databases, or tools
-3. **User-focused**: Describe outcomes from user/business perspective, not system internals
-4. **Verifiable**: Can be tested/validated without knowing implementation details
-
-**Good examples**:
-
-- "Users can complete checkout in under 3 minutes"
-- "System supports 10,000 concurrent users"
-- "95% of searches return results in under 1 second"
-- "Task completion rate improves by 40%"
-
-**Bad examples** (implementation-focused):
-
-- "API response time is under 200ms" (too technical, use "Users see results instantly")
-- "Database can handle 1000 TPS" (implementation detail, use user-facing metric)
-- "React components render efficiently" (framework-specific)
-- "Redis cache hit rate above 80%" (technology-specific)
+- The final section of every spec ties it to `.specify/memory/constitution.md`, citing the
+  concrete principles the feature must honour. This is mandatory, not optional.
